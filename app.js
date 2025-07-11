@@ -17,28 +17,29 @@ async function main() {
 
 
 
+//Routes-----
+app.get("/listings", async (req, res) => {
+    const allListings = await Listing.find({}).then( (res) => {
+        res.render("index.js", {allListings})
+    })
+});
 
 
 
 
+// app.get("/testListings",  async (req, res) => {
+//    let sampleListing = new Listing({
+//     title: "My new villa",
+//     description : "Han bhai hai villa",
+//     price: 400,
+//     location : "calcutta",
+//     country : "india"
 
-
-
-
-
-app.get("/testListings",  async (req, res) => {
-   let sampleListing = new Listing({
-    title: "My new villa",
-    description : "Han bhai hai villa",
-    price: 400,
-    location : "calcutta",
-    country : "india"
-
-   })
-   await sampleListing.save();
-   console.log("saved")
-   res.send("seccessfull");
-})
+//    })
+//    await sampleListing.save();
+//    console.log("saved")
+//    res.send("seccessfull");
+// })
 
 
 app.get("/", (req, res) => {
