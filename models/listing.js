@@ -22,3 +22,4 @@ const listingSchema = new Schema({
 
 const Listing = mongoose.model("Listing", listingSchema);
 module.exports = Listing;
+//this contain the whole model of listing that means structure or schema of database model
