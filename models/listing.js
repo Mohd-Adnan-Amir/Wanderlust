@@ -7,13 +7,11 @@ const listingSchema = new Schema({
     },
     description: String,
     image: {
-        filename: String,
-        url: {
-            type: String,
+        type: String,
             default: "https://unsplash.com/photos/man-sitting-on-rock-surrounded-by-water--Q_t4SCN8c4",
             set: (v) =>
                 v === "" ? "https://unsplash.com/photos/man-sitting-on-rock-surrounded-by-water--Q_t4SCN8c4" : v,
-        }
+        
     },
     price: Number,
     location: String,
