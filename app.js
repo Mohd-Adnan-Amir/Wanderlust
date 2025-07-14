@@ -88,6 +88,10 @@ app.delete("/listings/:id", async (req, res) => {
 app.get("/", (req, res) => {
     res.send("Server Working/ Browser on")
 })
+
+app.use((err, req, res, next) => {
+    res.stat
+})
 app.listen(8080, () => {
     console.log("Server Running");
 })
