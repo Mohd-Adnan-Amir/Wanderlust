@@ -9,12 +9,15 @@ const ejsMate = require('ejs-mate');
 const wrapAsync = require('./utils/wrapAsync.js');
 const ExpressError = require('./utils/ExpressError.js');
 const Joi = require('joi');
-const listingSchema = require("./schema.js")
+const { listingSchema, reviewSchema } = require("./schema.js")
+const Review = require('./models/review.js');
+
 
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"))
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // for JSON
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
@@ -48,6 +51,17 @@ const validateListing = (req, res, next) => {
         next();
     }
 }
+
+const validateReview = (req, res, next) => {
+     let { error } = reviewSchema.validate(req.body);
+    // console.log(result);
+    if(error){
+        let errMsg = error.details.map((el) => el.message).join(", ");
+        throw new ExpressError(400, errMsg);
+    }else{
+        next();
+    }
+}
 //index route
 app.get("/listings", wrapAsync (async (req, res) => {
     const allListings = await Listing.find({});
@@ -62,11 +76,11 @@ app.get("/listings/new", wrapAsync (async (req, res) => {
 //show route
 app.get("/listings/:id", wrapAsync (async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate("review");
     res.render("listings/show.ejs", { listing })
 }));
 
-//create routes
+//create routes-------{------middlewares--------}
 app.post("/listings", validateListing, wrapAsync (async (req, res, next) => {
     const newListing = new Listing(req.body.listing)
     await newListing.save();
@@ -96,6 +110,23 @@ app.delete("/listings/:id", wrapAsync (async (req, res) => {
     let deletedListing = await Listing.findByIdAndDelete(id);
     // console.log(deletedListingnpm)
     res.redirect("/listings")
+
+}));
+
+//Review routes
+
+app.post("/listings/:id/reviews", validateReview, wrapAsync (async (req, res) => {
+
+    let listing = await Listing.findById(req.params.id)
+    let newReview = new Review(req.body.review)
+    //adding to review array in listing
+    listing.review.push(newReview);
+
+    //saving to DB
+    await newReview.save()
+    await listing.save();
+    
+    res.redirect(`/listings/${listing._id}`);
 
 }));
 
