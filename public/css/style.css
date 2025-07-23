@@ -65,7 +65,7 @@ body {
 /* Listing items */
 .card {
     border: none !important;
-    margin-bottom: 2 rem;
+    margin-bottom: 2rem;
 }
 
 .card-img-top {
@@ -121,3 +121,13 @@ body {
     background-color: #fe424d !important;
     border: none !important;
 }
+
+/* for reviews */
+
+.card-review {
+  background-color: #fff;
+  transition: all 0.3s ease;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 0.5rem !important;
+}
+
