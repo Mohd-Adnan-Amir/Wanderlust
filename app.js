@@ -5,6 +5,10 @@ const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const ExpressError = require('./utils/ExpressError.js');
+const session = require('express-session');
+const flash = require('connect-flash');
+
+
 
 const listings = require("./routes/listing.js")
 const reviews = require("./routes/review.js")
@@ -31,11 +35,34 @@ async function main() {
     // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
 
-//Routes-----
+const secretOptions = {
+    secret: "mysecretstring",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    },
+
+};
 //initial route
 app.get("/", (req, res) => {
-    res.send("Server Working/ Roots")
+    res.send("Hii, i m root")
 })
+
+
+app.use(session(secretOptions));
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+})
+
+//Routes-----
+
 
 app.use("/listings", listings);
 app.use("/listings/:id/reviews", reviews);
