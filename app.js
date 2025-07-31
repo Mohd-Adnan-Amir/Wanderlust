@@ -7,11 +7,16 @@ const ejsMate = require('ejs-mate');
 const ExpressError = require('./utils/ExpressError.js');
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
 
 
+//routes required
+const listingRouter = require("./routes/listing.js")
+const reviewRouter = require("./routes/review.js")
+const userRouter = require("./routes/user.js")
 
-const listings = require("./routes/listing.js")
-const reviews = require("./routes/review.js")
 
 
 app.set("view engine", "ejs");
@@ -55,6 +60,15 @@ app.get("/", (req, res) => {
 app.use(session(secretOptions));
 app.use(flash());
 
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
@@ -63,10 +77,23 @@ app.use((req, res, next) => {
 
 //Routes-----
 
+// app.get("/demouser", async (req, res) => {
+//     let fakeUser = new User({
+//         email: "studen@gmail.com",
+//         username: "delta wala"
+//     });
+//     let registereduser =  await User.register(fakeUser, "mypass");
+//     res.send(registereduser);
 
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
-//because of /:id in this route, we use Mergeparams; true
+// })
+
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewRouter);
+app.use("/", userRouter);
+app.use("/", userRouter);
+
+
+//because of /:id in this route, we use Mergeparams true
 
 
 //initial route
