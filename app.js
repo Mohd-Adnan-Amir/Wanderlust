@@ -18,7 +18,7 @@ const reviewRouter = require("./routes/review.js")
 const userRouter = require("./routes/user.js")
 
 
-
+//middlewares
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"))
 app.use(express.urlencoded({ extended: true }));
@@ -26,6 +26,7 @@ app.use(express.json()); // for JSON
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
+
 
 //Database connection
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
@@ -40,6 +41,8 @@ async function main() {
     // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
 
+
+//session
 const secretOptions = {
     secret: "mysecretstring",
     resave: false,
@@ -51,6 +54,8 @@ const secretOptions = {
     },
 
 };
+
+
 //initial route
 app.get("/", (req, res) => {
     res.send("Hii, i m root")
@@ -72,34 +77,23 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
+    res.locals.currUser = req.user;
     next();
 })
 
-//Routes-----
 
-// app.get("/demouser", async (req, res) => {
-//     let fakeUser = new User({
-//         email: "studen@gmail.com",
-//         username: "delta wala"
-//     });
-//     let registereduser =  await User.register(fakeUser, "mypass");
-//     res.send(registereduser);
-
-// })
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
-app.use("/", userRouter);
-app.use("/", userRouter);
-
-
 //because of /:id in this route, we use Mergeparams true
+app.use("/", userRouter);
+
 
 
 //initial route
-app.get("/", (req, res) => {
-    res.send("Server Working/ Browser on")
-})
+// app.get("/", (req, res) => {
+//     res.send("Server Working/ Browser on")
+// })
 
 app.all("/*splat", (req, res, next) => {
     next(new ExpressError(404, "Page Not Found"));
