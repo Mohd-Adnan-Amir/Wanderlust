@@ -5,25 +5,16 @@ const Review = require('../models/review.js');
 const wrapAsync = require('../utils/wrapAsync.js');
 const { listingSchema, reviewSchema } = require("../schema.js")
 const ExpressError = require('../utils/ExpressError.js');
-
-
-const validateReview = (req, res, next) => {
-    let { error } = reviewSchema.validate(req.body);
-    // console.log(result);
-    if (error) {
-        let errMsg = error.details.map((el) => el.message).join(", ");
-        throw new ExpressError(400, errMsg);
-    } else {
-        next();
-    }
-}
+const {validateReview, isloggedIn, isReviewAuthor} = require("../middleware.js")
 
 
 //Review routes
-router.post("/", validateReview, wrapAsync(async (req, res) => {
+router.post("/", isloggedIn, validateReview, wrapAsync(async (req, res) => {
 
     let listing = await Listing.findById(req.params.id)
     let newReview = new Review(req.body.reviews)
+    newReview.author = req.user._id;
+    
     //adding to review array in listing
     listing.reviews.push(newReview);
 
@@ -37,7 +28,7 @@ router.post("/", validateReview, wrapAsync(async (req, res) => {
 }));
 
 //delete a review
-router.delete("/:reviewId", wrapAsync(async (req, res) => {
+router.delete("/:reviewId", isloggedIn, isReviewAuthor, wrapAsync(async (req, res) => {
     const { id, reviewId } = req.params;
 
     // Remove review reference from the listing

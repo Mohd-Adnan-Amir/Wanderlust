@@ -46,7 +46,7 @@ router.post("/login", savedRedirectUrl, passport.authenticate("local", {
     failureFlash: true,
 }),
     async (req, res) => {
-        req.flash("success", "welcome to Wanderlust! You are logged in")
+        req.flash("success", "Welcome to Wanderlust! You are logged in")
         let redirectUrl = res.locals.redirectUrl || "/listings";
         //this means aif there is any past path then redirect to it otherwise redirect to /listings
         res.redirect(redirectUrl);
