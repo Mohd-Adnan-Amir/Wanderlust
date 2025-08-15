@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/Mohd-Adnan-Amir/Airbnb#readme",
   "dependencies": {
+    "cloudinary": "^1.21.0",
     "connect-flash": "^0.1.1",
+    "dotenv": "^17.2.1",
     "ejs": "^3.1.10",
     "ejs-mate": "^4.0.0",
     "express": "^5.1.0",
@@ -27,6 +29,7 @@
     "method-override": "^3.0.0",
     "mongoose": "^8.16.3",
     "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0"
