@@ -1,5 +1,5 @@
 const sampleListings = [
- 
+
   {
     title: "Private Island Retreat",
     description:
