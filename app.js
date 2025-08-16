@@ -62,9 +62,9 @@ const secretOptions = {
 
 
 //initial route
-app.get("/", (req, res) => {
-    res.send("Hii, i m root")
-})
+// app.get("/", (req, res) => {
+//     res.send("Hii, i m root")
+// })
 
 
 app.use(session(secretOptions));
