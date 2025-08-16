@@ -3,7 +3,7 @@ const router = express.Router();
 const Listing = require('../models/listing.js');
 const wrapAsync = require('../utils/wrapAsync.js');
 const { isloggedIn, isOwner, validateListing } = require('../middleware.js');
-const multer  = require('multer')
+const multer = require('multer')
 const { storage } = require("../cloudConfig.js")
 const upload = multer({ storage })
 
@@ -27,7 +27,7 @@ router.get("/:id", wrapAsync(listingController.showListing));
 //create routes-------{------middlewares--------}
 router.post("/", isloggedIn, validateListing, upload.single('listing[image]'), wrapAsync(listingController.createListing));
 
-    //concept use is all on multer npm website
+//concept use is all on multer npm website
 
 
 //edit route
@@ -35,7 +35,7 @@ router.get("/:id/edit", isloggedIn, isOwner, wrapAsync(listingController.renderE
 
 
 //update 
-router.put("/:id", isloggedIn, isOwner, validateListing, wrapAsync(listingController.updateListing));
+router.put("/:id", isloggedIn, isOwner, upload.single('listing[image]'), validateListing, wrapAsync(listingController.updateListing));
 
 
 //delete route
