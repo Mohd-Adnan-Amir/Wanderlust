@@ -80,10 +80,10 @@ const secretOptions = {
 
 
 
-//initial route
-// app.get("/", (req, res) => {
-//     res.send("Hii, i m root")
-// })
+// initial route
+app.get("/", (req, res) => {
+    res.send("Welcome to Wanderlust")
+})
 
 
 app.use(session(secretOptions));
