@@ -115,9 +115,9 @@ app.use("/", userRouter);
 
 
 //initial route
-app.get("/", (req, res) => {
-    res.send("Server Working/ Browser on")
-})
+// app.get("/", (req, res) => {
+//     res.send("Server Working/ Browser on")
+// })
 
 app.all("/*splat", (req, res, next) => {
     next(new ExpressError(404, "Page Not Found"));
